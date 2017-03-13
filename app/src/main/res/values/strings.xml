@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RecyclerView Demo</string>
+    <string name="action_addone">Add 1</string>
+    <string name="action_addfive">Add 5</string>
+    <string name="action_addtop">Add Top</string>
+    <string name="action_addbottom">Add Bottom</string>
+    <string name="title_activity_tabbed">RecyclerView Activity</string>
+</resources>

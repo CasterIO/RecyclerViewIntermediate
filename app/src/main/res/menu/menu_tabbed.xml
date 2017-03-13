@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="bootstrap.casterio.com.myapplication.TabbedActivity">
+    <item
+        android:id="@+id/action_addone"
+        android:orderInCategory="97"
+        android:title="@string/action_addone"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_addfive"
+        android:orderInCategory="98"
+        android:title="@string/action_addfive"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_addtop"
+        android:orderInCategory="99"
+        android:title="@string/action_addtop"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_addbottom"
+        android:orderInCategory="100"
+        android:title="@string/action_addbottom"
+        app:showAsAction="never"/>
+</menu>
