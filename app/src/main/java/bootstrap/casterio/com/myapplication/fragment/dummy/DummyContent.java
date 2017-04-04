@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -38,16 +39,24 @@ public class DummyContent {
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new DummyItem(String.valueOf(position), makeDetails(position), makeDetails(position));
     }
 
     private static String makeDetails(int position) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
-        for (int i = 0; i < position; i++) {
-            builder.append("\nMore details information here.");
+        StringBuffer retString = new StringBuffer();
+        retString.append("Item: " + position + "\n");
+
+        boolean FIXED_MODE = false;
+        if (FIXED_MODE) {
+            retString.append("XXXXXXXX");
+        } else {
+            Random randomGenerator = new Random();
+            int randomInt = randomGenerator.nextInt(100);
+            for (int x = 0; x < randomInt; x++) {
+                retString.append("X");
+            }
         }
-        return builder.toString();
+        return retString.toString();
     }
 
     /**

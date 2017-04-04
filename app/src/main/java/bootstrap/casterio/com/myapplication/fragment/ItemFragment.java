@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,14 @@ public class ItemFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private int mFragType = 1;
     private OnListFragmentInteractionListener mListener;
+
+    public static final int FRAG_LINEAR = 1;
+    public static final int FRAG_GRID = 2;
+    public static final int FRAG_STAG_GRID = 3;
+
+    private static final int NUM_COLUMNS = 3;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -50,7 +57,7 @@ public class ItemFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mFragType = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
 
@@ -63,12 +70,17 @@ public class ItemFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
+            if (mFragType <= FRAG_LINEAR) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            } else if (mFragType == FRAG_GRID) {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, NUM_COLUMNS));
+            } else if (mFragType == FRAG_STAG_GRID){
+                StaggeredGridLayoutManager sgm = new StaggeredGridLayoutManager(NUM_COLUMNS, StaggeredGridLayoutManager.VERTICAL);
+                sgm.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+                recyclerView.setLayoutManager(sgm);
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener);
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }
