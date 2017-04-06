@@ -46,7 +46,7 @@ public class DummyContent {
         StringBuffer retString = new StringBuffer();
         retString.append("Item: " + position + "\n");
 
-        boolean FIXED_MODE = false;
+        boolean FIXED_MODE = true;
         if (FIXED_MODE) {
             retString.append("XXXXXXXX");
         } else {

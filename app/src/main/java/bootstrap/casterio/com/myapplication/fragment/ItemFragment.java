@@ -1,8 +1,10 @@
 package bootstrap.casterio.com.myapplication.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.dgreenhalgh.android.simpleitemdecoration.grid.GridDividerItemDecoration;
 
 import bootstrap.casterio.com.myapplication.R;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent;
@@ -35,6 +39,10 @@ public class ItemFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 3;
 
+    private RecyclerView recyclerView;
+    private Drawable smallDivider;
+    private GridDividerItemDecoration gridDecoration;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -42,8 +50,6 @@ public class ItemFragment extends Fragment {
     public ItemFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static ItemFragment newInstance(int columnCount) {
         ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
@@ -66,24 +72,49 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
+            recyclerView = (RecyclerView) view;
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+
+            smallDivider = context.getDrawable(R.drawable.divider_drawable);
+            gridDecoration = new GridDividerItemDecoration(smallDivider, smallDivider, NUM_COLUMNS);
+
             if (mFragType <= FRAG_LINEAR) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+                recyclerView.addItemDecoration(
+                        new DividerItemDecoration(recyclerView.getContext(),
+                                DividerItemDecoration.VERTICAL));
             } else if (mFragType == FRAG_GRID) {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, NUM_COLUMNS));
-            } else if (mFragType == FRAG_STAG_GRID){
-                StaggeredGridLayoutManager sgm = new StaggeredGridLayoutManager(NUM_COLUMNS, StaggeredGridLayoutManager.VERTICAL);
-                sgm.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-                recyclerView.setLayoutManager(sgm);
+                //Use the custom Item Decoration class
+//                recyclerView.addItemDecoration(new GridDividerDecoration(recyclerView.getContext()));
+
+//                //Large divider on bottom
+//                Drawable lgDivider = context.getDrawable(R.drawable.divider_lg);
+//                recyclerView.addItemDecoration(
+//                        new GridDividerItemDecoration(lgDivider, lgDivider, NUM_COLUMNS));
+//
+//                //Medium Divider in middle
+//                Drawable medDivider = context.getDrawable(R.drawable.divider_med);
+//                recyclerView.addItemDecoration(
+//                        new GridDividerItemDecoration(medDivider, medDivider, NUM_COLUMNS));
+//
+//                //Small divider on top
+//                Drawable smallDivider = context.getDrawable(R.drawable.divider_sm);
+//                recyclerView.addItemDecoration(
+//                        new GridDividerItemDecoration(smallDivider, smallDivider, NUM_COLUMNS));
+            } else if (mFragType == FRAG_STAG_GRID) {
+                recyclerView.setLayoutManager(new StaggeredGridLayoutManager(NUM_COLUMNS, StaggeredGridLayoutManager.VERTICAL));
+
             }
             MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener);
             recyclerView.setAdapter(adapter);
         }
         return view;
     }
+
+
 
 
     @Override
@@ -117,4 +148,18 @@ public class ItemFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
     }
+
+    private boolean dividersVisible = false;
+
+    public void toggleDividerVisibility() {
+        if (dividersVisible) {
+            recyclerView.removeItemDecoration(gridDecoration);
+            dividersVisible = false;
+        } else {
+            recyclerView.addItemDecoration(gridDecoration);
+            dividersVisible = true;
+        }
+    }
+
+
 }

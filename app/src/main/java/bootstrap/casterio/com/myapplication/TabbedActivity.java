@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,6 +16,10 @@ import bootstrap.casterio.com.myapplication.fragment.ItemFragment;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent;
 
 public class TabbedActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
+
+    ItemFragment frag1 = ItemFragment.newInstance(ItemFragment.FRAG_LINEAR);
+    ItemFragment frag2 = ItemFragment.newInstance(ItemFragment.FRAG_GRID);
+    ItemFragment frag3 = ItemFragment.newInstance(ItemFragment.FRAG_STAG_GRID);
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -67,6 +72,7 @@ public class TabbedActivity extends AppCompatActivity implements ItemFragment.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_addone) {
+            frag2.toggleDividerVisibility();
             return true;
         }
 
@@ -85,15 +91,24 @@ public class TabbedActivity extends AppCompatActivity implements ItemFragment.On
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return ItemFragment.newInstance(position + 1);
+
+            switch (position) {
+                case 0:
+                    return frag1;
+                case 1:
+                    return frag2;
+                case 2:
+                    return frag3;
+            }
+            return null;
+
         }
 
         @Override
