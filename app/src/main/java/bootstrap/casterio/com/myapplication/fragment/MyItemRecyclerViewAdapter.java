@@ -6,18 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 import bootstrap.casterio.com.myapplication.R;
 import bootstrap.casterio.com.myapplication.fragment.ItemFragment.OnListFragmentInteractionListener;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent.DummyItem;
+import bootstrap.casterio.com.myapplication.ui.touchHelper.ItemTouchHelperAdapter;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -54,7 +56,25 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return 25;
+    }
+
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+//        //Use Collections to modify the dataset
+        Collections.swap(mValues, fromPosition, toPosition);
+//        //Notify the items were moved
+        notifyItemMoved(fromPosition, toPosition);
+        return false;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        //Remove Item from dataset
+        mValues.remove(position);
+        //Notify that the item was removed
+        notifyItemRemoved(position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

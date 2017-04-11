@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.dgreenhalgh.android.simpleitemdecoration.grid.GridDividerItemDecorati
 import bootstrap.casterio.com.myapplication.R;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent.DummyItem;
+import bootstrap.casterio.com.myapplication.ui.touchHelper.OnStartDragListener;
+import bootstrap.casterio.com.myapplication.ui.touchHelper.SimpleItemTouchHelperCallback;
 
 /**
  * A fragment representing a list of Items.
@@ -25,7 +28,7 @@ import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent.DummyIte
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ItemFragment extends Fragment {
+public class ItemFragment extends Fragment implements OnStartDragListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -42,6 +45,8 @@ public class ItemFragment extends Fragment {
     private RecyclerView recyclerView;
     private Drawable smallDivider;
     private GridDividerItemDecoration gridDecoration;
+
+    private ItemTouchHelper itemTouchHelper;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -110,11 +115,13 @@ public class ItemFragment extends Fragment {
             }
             MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener);
             recyclerView.setAdapter(adapter);
+
+            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+            itemTouchHelper = new ItemTouchHelper(callback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
         }
         return view;
     }
-
-
 
 
     @Override
@@ -134,18 +141,16 @@ public class ItemFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        itemTouchHelper.startDrag(viewHolder);
+    }
+
+
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     *
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
     }
 
@@ -160,6 +165,4 @@ public class ItemFragment extends Fragment {
             dividersVisible = true;
         }
     }
-
-
 }
