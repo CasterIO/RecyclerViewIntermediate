@@ -10,11 +10,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dgreenhalgh.android.simpleitemdecoration.grid.GridDividerItemDecoration;
+
+import java.util.List;
 
 import bootstrap.casterio.com.myapplication.R;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent;
@@ -48,6 +54,9 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
 
     private ItemTouchHelper itemTouchHelper;
 
+    private MyItemRecyclerViewAdapter adapter;
+    private List<DummyItem> items;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -75,6 +84,7 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         if (view instanceof RecyclerView) {
@@ -113,7 +123,8 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
                 recyclerView.setLayoutManager(new StaggeredGridLayoutManager(NUM_COLUMNS, StaggeredGridLayoutManager.VERTICAL));
 
             }
-            MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener);
+            items = DummyContent.ITEMS;
+            adapter = new MyItemRecyclerViewAdapter(items, mListener);
             recyclerView.setAdapter(adapter);
 
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
@@ -123,6 +134,51 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list_changes, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        int LIST_INDEX = 1;
+
+        switch (id) {
+            case R.id.action_additem:
+                Log.d("MSW", "---- ONE PRESSED ---");
+
+                List<DummyItem> newItems = items;
+                newItems.add(LIST_INDEX, DummyContent.createDummyItemY(newItems.size()));
+                newItems.add(LIST_INDEX + 1, DummyContent.createDummyItemY(newItems.size()));
+
+                items.add(LIST_INDEX, DummyContent.createDummyItemY(items.size()));
+                items.add(LIST_INDEX + 1, DummyContent.createDummyItemY(items.size()));
+//
+                adapter.notifyItemRangeInserted(LIST_INDEX, 2);
+////            adapter.notifyItemInserted(index);
+////            adapter.notifyDataSetChanged();
+
+//                adapter.swapItems(newItems);
+
+                Log.d("MSW", "Size of orig list");
+//                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DummyItemDiffCallback(items, newItems));
+//                diffResult.dispatchUpdatesTo(adapter);
+//
+                return true;
+            case R.id.action_deleteitem:
+                items.remove(LIST_INDEX);
+                items.remove(LIST_INDEX + 1);
+                adapter.notifyItemRangeRemoved(LIST_INDEX, 2);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -165,4 +221,5 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
             dividersVisible = true;
         }
     }
+
 }

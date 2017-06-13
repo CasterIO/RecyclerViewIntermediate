@@ -1,6 +1,8 @@
 package bootstrap.casterio.com.myapplication.fragment;
 
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +41,18 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
+
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
+        holder.mView.setBackgroundColor(mValues.get(position).content.contains("Y") ? 0xFFE0E0E0 : 0xFFFAFAFA);
+
+        if (mValues.get(position).content.contains("Y")) {
+            Log.d("MSW", "---- IS Y IN ADAPTER");
+
+
+        } else {
+            Log.d("MSW", "   - is X IIN ADAPTER");
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +87,15 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         mValues.remove(position);
         //Notify that the item was removed
         notifyItemRemoved(position);
+    }
+
+    public void swapItems(List<DummyItem> items) {
+        final DummyItemDiffCallback diffCallback = new DummyItemDiffCallback(this.mValues, items);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.mValues.clear();
+        this.mValues.addAll(items);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
