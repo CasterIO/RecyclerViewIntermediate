@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -19,6 +20,8 @@ public class DummyContent {
      */
     public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
 
+    public static final List<DummyItem> ITEMS_Y1 = new ArrayList<DummyItem>();
+
     /**
      * A map of sample (dummy) items, by ID.
      */
@@ -33,27 +36,42 @@ public class DummyContent {
         }
     }
 
+
     private static void addItem(DummyItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), makeDetails(position), makeDetails(position));
+        return new DummyItem(String.valueOf(position), makeDetails(position, false), makeDetails(position, false));
     }
 
-    private static String makeDetails(int position) {
+    public static DummyItem createDummyItemY(int position) {
+        return new DummyItem(String.valueOf(position), makeDetails(position, true), makeDetails(position, true));
+    }
+
+    private static String makeDetails(int position, boolean isY) {
         StringBuffer retString = new StringBuffer();
         retString.append("Item: " + position + "\n");
 
-        boolean FIXED_MODE = true;
+        boolean FIXED_MODE = false;
         if (FIXED_MODE) {
-            retString.append("XXXXXXXX");
+            if (isY) {
+                retString.append("YYYYYYYY");
+            } else {
+                retString.append("XXXXXXXX");
+            }
         } else {
             Random randomGenerator = new Random();
             int randomInt = randomGenerator.nextInt(100);
             for (int x = 0; x < randomInt; x++) {
-                retString.append("X");
+                if (isY) {
+                    retString.append("Y");
+                } else {
+                    retString.append("X");
+                }
+
+
             }
         }
         return retString.toString();
@@ -75,7 +93,32 @@ public class DummyContent {
 
         @Override
         public String toString() {
-            return content;
+            return content + id + details;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            // self check
+            if (this == o)
+                return true;
+            // null check
+            if (o == null)
+                return false;
+            // type check and cast
+            if (getClass() != o.getClass())
+                return false;
+            DummyItem dummyItem = (DummyItem) o;
+            // field comparison
+            return Objects.equals(content, dummyItem.content)
+                    && Objects.equals(details, dummyItem.details);
+        }
+
+
+        @Override
+        public int hashCode() {
+            int result = Integer.getInteger(id);
+            result = 31 * result + (details != null ? details.hashCode() : 0);
+            return result;
         }
     }
 }
