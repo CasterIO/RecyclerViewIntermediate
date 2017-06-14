@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="bootstrap.casterio.com.myapplication.TabbedActivity">
+    <item
+        android:id="@+id/action_additem"
+        android:orderInCategory="97"
+        android:title="Move TO"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_deleteitem"
+        android:orderInCategory="98"
+        android:title="Move FROM"
+        app:showAsAction="never"/>
+
+</menu>

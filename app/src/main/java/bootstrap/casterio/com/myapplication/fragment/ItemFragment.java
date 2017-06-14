@@ -11,10 +11,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dgreenhalgh.android.simpleitemdecoration.grid.GridDividerItemDecoration;
+
+import java.util.Collections;
+import java.util.List;
 
 import bootstrap.casterio.com.myapplication.R;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent;
@@ -48,6 +54,9 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
 
     private ItemTouchHelper itemTouchHelper;
 
+    private MyItemRecyclerViewAdapter adapter;
+    private List<DummyItem> items;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -75,6 +84,7 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         if (view instanceof RecyclerView) {
@@ -113,7 +123,8 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
                 recyclerView.setLayoutManager(new StaggeredGridLayoutManager(NUM_COLUMNS, StaggeredGridLayoutManager.VERTICAL));
 
             }
-            MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener);
+            items = DummyContent.ITEMS;
+            adapter = new MyItemRecyclerViewAdapter(items, mListener);
             recyclerView.setAdapter(adapter);
 
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
@@ -123,6 +134,30 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list_changes, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int INDEX_FROM = 2;
+        int INDEX_TO = 4;
+
+        switch (item.getItemId()) {
+            case R.id.action_additem:
+                Collections.swap(items, INDEX_FROM, INDEX_TO);
+                adapter.notifyItemMoved(INDEX_FROM, INDEX_TO);
+                return true;
+            case R.id.action_deleteitem:
+                Collections.swap(items, INDEX_TO, INDEX_FROM);
+                adapter.notifyItemMoved(INDEX_TO, INDEX_FROM);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -165,4 +200,5 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
             dividersVisible = true;
         }
     }
+
 }
