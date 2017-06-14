@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.dgreenhalgh.android.simpleitemdecoration.grid.GridDividerItemDecoration;
 
+import java.util.Collections;
 import java.util.List;
 
 import bootstrap.casterio.com.myapplication.R;
@@ -143,38 +143,17 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        int LIST_INDEX = 1;
+        int INDEX_FROM = 2;
+        int INDEX_TO = 4;
 
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.action_additem:
-                Log.d("MSW", "---- ONE PRESSED ---");
-
-                List<DummyItem> newItems = items;
-                newItems.add(LIST_INDEX, DummyContent.createDummyItemY(newItems.size()));
-                newItems.add(LIST_INDEX + 1, DummyContent.createDummyItemY(newItems.size()));
-
-                items.add(LIST_INDEX, DummyContent.createDummyItemY(items.size()));
-                items.add(LIST_INDEX + 1, DummyContent.createDummyItemY(items.size()));
-//
-                adapter.notifyItemRangeInserted(LIST_INDEX, 2);
-////            adapter.notifyItemInserted(index);
-////            adapter.notifyDataSetChanged();
-
-//                adapter.swapItems(newItems);
-
-                Log.d("MSW", "Size of orig list");
-//                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DummyItemDiffCallback(items, newItems));
-//                diffResult.dispatchUpdatesTo(adapter);
-//
+                Collections.swap(items, INDEX_FROM, INDEX_TO);
+                adapter.notifyItemMoved(INDEX_FROM, INDEX_TO);
                 return true;
             case R.id.action_deleteitem:
-                items.remove(LIST_INDEX);
-                items.remove(LIST_INDEX + 1);
-                adapter.notifyItemRangeRemoved(LIST_INDEX, 2);
+                Collections.swap(items, INDEX_TO, INDEX_FROM);
+                adapter.notifyItemMoved(INDEX_TO, INDEX_FROM);
                 return true;
         }
         return super.onOptionsItemSelected(item);
