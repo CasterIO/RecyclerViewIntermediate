@@ -2,6 +2,7 @@ package bootstrap.casterio.com.myapplication.fragment;
 
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        holder.mIdView.setText(mValues.get(position).id);
+        holder.mIdView.setText("" + mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
         holder.mView.setBackgroundColor(mValues.get(position).content.contains("Y") ? 0xFFE0E0E0 : 0xFFFAFAFA);
 
@@ -81,6 +82,15 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     }
 
     public void swapItems(List<DummyItem> items) {
+        Log.d("MSW", "NEW LIST CONTENTS");
+        for (DummyItem i : items) {
+            Log.d("MSW", "The item is: " + i.id + " | " + i.content);
+        }
+
+        Log.d("MSW", "VALUES ");
+        for (DummyItem i : mValues) {
+            Log.d("MSW", "====== item is: " + i.id + " | " + i.content);
+        }
         final DummyItemDiffCallback diffCallback = new DummyItemDiffCallback(this.mValues, items);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 

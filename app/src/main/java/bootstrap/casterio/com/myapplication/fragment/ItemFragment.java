@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +20,6 @@ import android.view.ViewGroup;
 
 import com.dgreenhalgh.android.simpleitemdecoration.grid.GridDividerItemDecoration;
 
-import java.util.Collections;
 import java.util.List;
 
 import bootstrap.casterio.com.myapplication.R;
@@ -143,17 +143,41 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int INDEX_FROM = 2;
-        int INDEX_TO = 4;
+        int INDEX_START = 1;
 
         switch (item.getItemId()) {
             case R.id.action_additem:
-                Collections.swap(items, INDEX_FROM, INDEX_TO);
-                adapter.notifyItemMoved(INDEX_FROM, INDEX_TO);
+                //Adding Multiple Items
+                items.add(INDEX_START, DummyContent.createDummyItemY(items.size() + 1));
+                items.add(INDEX_START + 1, DummyContent.createDummyItemY(items.size() + 1));
+                items.add(INDEX_START + 2, DummyContent.createDummyItemY(items.size() + 1));
+
+                Log.d("MSW", "ITEMS ADDED");
+                for (DummyItem i : items) {
+                    Log.d("MSW", "The item is: " + i.id + " | " + i.content);
+                }
+                adapter.notifyItemRangeInserted(INDEX_START, 3);
                 return true;
             case R.id.action_deleteitem:
-                Collections.swap(items, INDEX_TO, INDEX_FROM);
-                adapter.notifyItemMoved(INDEX_TO, INDEX_FROM);
+                items.remove(INDEX_START);
+                items.remove(INDEX_START);
+                items.remove(INDEX_START);
+
+                Log.d("MSW", "ITEMS REMOVED");
+                for (DummyItem i : items) {
+                    Log.d("MSW", "The item is: " + i.id + " | " + i.content);
+                }
+                adapter.notifyItemRangeRemoved(INDEX_START, 3);
+                return true;
+            case R.id.action_shuffle:
+//                Collections.shuffle(items);
+//                adapter.notifyDataSetChanged();
+                adapter.swapItems(DummyContent.shuffle(items));
+                return true;
+            case R.id.action_sort:
+//                Collections.sort(items);
+//                adapter.notifyDataSetChanged();
+                adapter.swapItems(DummyContent.sort(items));
                 return true;
         }
         return super.onOptionsItemSelected(item);

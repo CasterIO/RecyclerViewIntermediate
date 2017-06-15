@@ -1,6 +1,9 @@
 package bootstrap.casterio.com.myapplication.fragment.dummy;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,18 +39,31 @@ public class DummyContent {
         }
     }
 
+    public static List<DummyItem> shuffle(List<DummyItem> items) {
+        List<DummyItem> newItems = new ArrayList<>();
+        newItems.addAll(items);
+        Collections.shuffle(newItems);
+        return newItems;
+    }
+
+    public static List<DummyItem> sort(List<DummyItem> items) {
+        List<DummyItem> newItems = new ArrayList<>();
+        newItems.addAll(items);
+        Collections.sort(newItems);
+        return newItems;
+    }
 
     private static void addItem(DummyItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(Long.toString(item.id), item);
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), makeDetails(position, false), makeDetails(position, false));
+        return new DummyItem(position, makeDetails(position, false), makeDetails(position, false));
     }
 
     public static DummyItem createDummyItemY(int position) {
-        return new DummyItem(String.valueOf(position), makeDetails(position, true), makeDetails(position, true));
+        return new DummyItem(position, makeDetails(position, true), makeDetails(position, true));
     }
 
     private static String makeDetails(int position, boolean isY) {
@@ -80,12 +96,12 @@ public class DummyContent {
     /**
      * A dummy item representing a piece of content.
      */
-    public static class DummyItem {
-        public final String id;
+    public static class DummyItem implements Comparable<DummyItem>{
+        public final long id;
         public final String content;
         public final String details;
 
-        public DummyItem(String id, String content, String details) {
+        public DummyItem(long id, String content, String details) {
             this.id = id;
             this.content = content;
             this.details = details;
@@ -93,7 +109,7 @@ public class DummyContent {
 
         @Override
         public String toString() {
-            return content + id + details;
+            return content + Long.toString(id) + details;
         }
 
         @Override
@@ -116,9 +132,12 @@ public class DummyContent {
 
         @Override
         public int hashCode() {
-            int result = Integer.getInteger(id);
-            result = 31 * result + (details != null ? details.hashCode() : 0);
-            return result;
+            return (int) id;
+        }
+
+        @Override
+        public int compareTo(@NonNull DummyItem dummyItem) {
+            return Long.compare(id, dummyItem.id);
         }
     }
 }

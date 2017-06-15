@@ -32,12 +32,12 @@ public class DummyItemDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return mNewList.get(newItemPosition).id.equals(mOldList.get(oldItemPosition).id);
+        return mNewList.get(newItemPosition).id == mOldList.get(oldItemPosition).id;
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return mNewList.get(newItemPosition).equals(mOldList.get(oldItemPosition));
+        return mNewList.get(newItemPosition).content.equals(mOldList.get(oldItemPosition).content);
     }
 
     @Nullable

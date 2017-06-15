@@ -4,14 +4,22 @@
       tools:context="bootstrap.casterio.com.myapplication.TabbedActivity">
     <item
         android:id="@+id/action_additem"
-        android:orderInCategory="97"
-        android:title="Move TO"
+        android:title="Add Items"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_deleteitem"
-        android:orderInCategory="98"
-        android:title="Move FROM"
+        android:title="Remove Items"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_shuffle"
+        android:title="Shuffle"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_sort"
+        android:title="Sort"
         app:showAsAction="never"/>
 
 </menu>
