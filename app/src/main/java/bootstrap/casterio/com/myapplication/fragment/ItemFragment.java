@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,7 +95,6 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
 
             if (mFragType <= FRAG_LINEAR) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
                 recyclerView.addItemDecoration(
                         new DividerItemDecoration(recyclerView.getContext(),
                                 DividerItemDecoration.VERTICAL));
@@ -152,32 +150,25 @@ public class ItemFragment extends Fragment implements OnStartDragListener {
                 items.add(INDEX_START + 1, DummyContent.createDummyItemY(items.size() + 1));
                 items.add(INDEX_START + 2, DummyContent.createDummyItemY(items.size() + 1));
 
-                Log.d("MSW", "ITEMS ADDED");
-                for (DummyItem i : items) {
-                    Log.d("MSW", "The item is: " + i.id + " | " + i.content);
-                }
                 adapter.notifyItemRangeInserted(INDEX_START, 3);
                 return true;
             case R.id.action_deleteitem:
                 items.remove(INDEX_START);
                 items.remove(INDEX_START);
                 items.remove(INDEX_START);
-
-                Log.d("MSW", "ITEMS REMOVED");
-                for (DummyItem i : items) {
-                    Log.d("MSW", "The item is: " + i.id + " | " + i.content);
-                }
                 adapter.notifyItemRangeRemoved(INDEX_START, 3);
                 return true;
             case R.id.action_shuffle:
-//                Collections.shuffle(items);
-//                adapter.notifyDataSetChanged();
-                adapter.swapItems(DummyContent.shuffle(items));
+                List<DummyItem> shuffleList = DummyContent.shuffle(items);
+
+                adapter.swapItems(shuffleList);
+
                 return true;
             case R.id.action_sort:
-//                Collections.sort(items);
-//                adapter.notifyDataSetChanged();
-                adapter.swapItems(DummyContent.sort(items));
+                List<DummyItem> sortList = DummyContent.sort(items);
+
+                adapter.swapItems(sortList);
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

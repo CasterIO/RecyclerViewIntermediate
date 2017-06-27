@@ -2,7 +2,6 @@ package bootstrap.casterio.com.myapplication.fragment;
 
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,8 @@ import bootstrap.casterio.com.myapplication.R;
 import bootstrap.casterio.com.myapplication.fragment.ItemFragment.OnListFragmentInteractionListener;
 import bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent.DummyItem;
 import bootstrap.casterio.com.myapplication.ui.touchHelper.ItemTouchHelperAdapter;
+
+import static bootstrap.casterio.com.myapplication.fragment.dummy.DummyContent.DUMMY_COUNT;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -60,7 +61,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public int getItemCount() {
-        return 25;
+        return DUMMY_COUNT;
     }
 
 
@@ -81,21 +82,11 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         notifyItemRemoved(position);
     }
 
-    public void swapItems(List<DummyItem> items) {
-        Log.d("MSW", "NEW LIST CONTENTS");
-        for (DummyItem i : items) {
-            Log.d("MSW", "The item is: " + i.id + " | " + i.content);
-        }
-
-        Log.d("MSW", "VALUES ");
-        for (DummyItem i : mValues) {
-            Log.d("MSW", "====== item is: " + i.id + " | " + i.content);
-        }
-        final DummyItemDiffCallback diffCallback = new DummyItemDiffCallback(this.mValues, items);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+    public void swapItems(List<DummyItem> newList) {
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DummyItemDiffCallback(this.mValues, newList));
 
         this.mValues.clear();
-        this.mValues.addAll(items);
+        this.mValues.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
     }
 

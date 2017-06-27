@@ -30,11 +30,11 @@ public class DummyContent {
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    private static final int COUNT = 25;
+    public static final int DUMMY_COUNT = 10;
 
     static {
         // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 1; i <= DUMMY_COUNT; i++) {
             addItem(createDummyItem(i));
         }
     }
